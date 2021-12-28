@@ -1,0 +1,70 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.arulmavendemo</groupId>
+	<artifactId>MavenWarExample</artifactId>
+	<version>1.0.0-SNAPSHOT</version>
+	<name>Maven war ::  example</name>
+	<url>http://maven.apache.org</url>
+	<packaging>war</packaging>
+
+	
+
+	<build>
+		<plugins>
+    <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.0.0</version>
+       <configuration>
+          <webResources>
+            <resource>
+              <directory>${project.basedir}\dist\</directory>
+            </resource>
+            <resource>
+              <directory>${project.basedir}\\weblogic\</directory>
+            </resource>
+
+          </webResources>
+		  
+        </configuration>
+    </plugin>
+    <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.4.0</version>
+        <executions>
+            <execution>
+                <id>exec-npm-install</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                      <executable>npm.cmd</executable>
+                    <arguments>
+                        <argument>install</argument>
+                    </arguments>
+                </configuration>
+                <goals>
+                    <goal>exec</goal>
+                </goals>
+            </execution>
+            <execution>
+                <id>exec-npm-ng-build</id>
+                <phase>generate-sources</phase>
+                <configuration>
+                    <workingDirectory>${project.basedir}</workingDirectory>
+                    <executable>ng</executable>
+                    <arguments>
+                        <argument>build</argument>
+                        <argument>--base-href=/mavenbuildapp/</argument>
+                    </arguments>
+                </configuration>
+                <goals>
+                    <goal>exec</goal>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+</plugins> 
+	</build>
+</project>
