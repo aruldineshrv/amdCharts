@@ -1,70 +1,94 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.arulmavendemo</groupId>
-	<artifactId>MavenWarExample</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
-	<name>Maven war ::  example</name>
-	<url>http://maven.apache.org</url>
-	<packaging>war</packaging>
-
-	
-
-	<build>
-		<plugins>
-    <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.0.0</version>
-       <configuration>
-          <webResources>
-            <resource>
-              <directory>${project.basedir}\dist\</directory>
-            </resource>
-            <resource>
-              <directory>${project.basedir}\\weblogic\</directory>
-            </resource>
-
-          </webResources>
-		  
-        </configuration>
-    </plugin>
-    <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.4.0</version>
-        <executions>
-            <execution>
-                <id>exec-npm-install</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                    <workingDirectory>${project.basedir}</workingDirectory>
-                      <executable>npm.cmd</executable>
-                    <arguments>
-                        <argument>install</argument>
-                    </arguments>
-                </configuration>
-                <goals>
-                    <goal>exec</goal>
-                </goals>
-            </execution>
-            <execution>
-                <id>exec-npm-ng-build</id>
-                <phase>generate-sources</phase>
-                <configuration>
-                    <workingDirectory>${project.basedir}</workingDirectory>
-                    <executable>ng</executable>
-                    <arguments>
-                        <argument>build</argument>
-                        <argument>--base-href=/mavenbuildapp/</argument>
-                    </arguments>
-                </configuration>
-                <goals>
-                    <goal>exec</goal>
-                </goals>
-            </execution>
-        </executions>
-    </plugin>
-</plugins> 
-	</build>
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>com.eaiAPP3538027</groupId>
+   <artifactId>FIND</artifactId>
+   <version>0.0.1-SNAPSHOT</version>
+   <name>FIND-APP</name>
+   <packaging>pom</packaging>
+   <properties>
+      <timestamp>${maven.build.timestamp}</timestamp>
+      <maven.build.timestamp.format>yyyy_MM_dd_HH_mm</maven.build.timestamp.format>
+   </properties>
+   <build>
+      <finalName>FIND</finalName>
+      <plugins>
+         <plugin>
+            <groupId>com.coderplus.maven.plugins</groupId>
+            <artifactId>copy-rename-maven-plugin</artifactId>
+            <version>1.0</version>
+            <executions>
+               <execution>
+                  <id>copy-find-api</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <sourceFile>${project.basedir}/find-api/target/FIND-API.war</sourceFile>
+                     <destinationFile>${project.basedir}/Conexus_Release/FIND-API.war</destinationFile>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>copy-find-ui</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <sourceFile>${project.basedir}/find-ui/target/FIND-UI.war</sourceFile>
+                     <destinationFile>${project.basedir}/Conexus_Release/FIND-UI.war</destinationFile>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <version>2.5.5</version>
+            <configuration>
+               <appendAssemblyId>true</appendAssemblyId>
+               <finalName>${maven.build.timestamp}_find</finalName>
+               <descriptors>
+                  <descriptor>${project.basedir}/assembly.xml</descriptor>
+               </descriptors>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>create-archive</id>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>single</goal>
+                  </goals>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+   <modules>
+      <module>find-ui</module>
+      <module>find-api</module>
+   </modules>
 </project>
+
+
+
+
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+	<id>app</id>
+	<formats>
+		<format>tar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>${project.basedir}/</directory>
+			 <includes>
+                <include>${project.basedir}/Conexus_Release/*.war</include>
+            </includes>
+			<useDefaultExcludes>true</useDefaultExcludes>
+		</fileSet>
+	</fileSets>
+</assembly>
